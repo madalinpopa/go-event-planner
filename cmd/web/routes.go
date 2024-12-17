@@ -7,8 +7,8 @@ func (app *App) routes() http.Handler {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("GET /ping", ping)
-	mux.HandleFunc("GET /{$}", home)
+	mux.HandleFunc("GET /ping", app.ping)
+	mux.HandleFunc("GET /{$}", app.home)
 
 	return mux
 }
