@@ -24,7 +24,7 @@ type App struct {
 
 func main() {
 
-	flag.StringVar(&port, "port", "8080", "port to listen on")
+	flag.StringVar(&port, "port", "4000", "port to listen on")
 	flag.Parse()
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
