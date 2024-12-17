@@ -35,7 +35,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 
 		patterns := []string{
 			"html/base.tmpl",
-			"html/pages/*.tmpl",
+			"html/partials/*.tmpl",
 			page,
 		}
 
@@ -45,7 +45,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		}
 		cache[name] = ts
 	}
-	return nil, nil
+	return cache, nil
 }
 
 // render writes a rendered template to the response writer with the given status code.
@@ -56,6 +56,7 @@ func (app *App) render(w http.ResponseWriter, r *http.Request, name string, data
 	// Check if the template with the given name exists in the template cache.
 	// If the template is not found, respond with a server error and stop further processing.
 	t, ok := app.templates[name]
+
 	if !ok {
 		err := fmt.Errorf("template %s not found", name)
 		app.serverError(w, r, err)
