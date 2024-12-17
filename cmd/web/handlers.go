@@ -1,11 +1,23 @@
 package main
 
-import "net/http"
+import (
+	"net/http"
+	"runtime/debug"
+)
 
-func ping(w http.ResponseWriter, _ *http.Request) {
+// ping handles the /ping endpoint, responding with "pong" to indicate the service is available and operational.
+func (app *App) ping(w http.ResponseWriter, r *http.Request) {
+
+	var (
+		method = r.Method
+		url    = r.URL.RequestURI()
+		trace  = string(debug.Stack())
+	)
+
 	_, err := w.Write([]byte("pong"))
 	if err != nil {
-		panic(err)
+		app.logger.Error(err.Error(), "method", method, "url", url, "trace", trace)
+		return
 	}
 }
 
