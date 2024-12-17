@@ -1,9 +1,12 @@
 package main
 
 import (
+	"bytes"
+	"fmt"
 	"github.com/madalinpopa/go-event-planner/ui"
 	"html/template"
 	"io/fs"
+	"net/http"
 	"path/filepath"
 	"time"
 )
@@ -43,4 +46,38 @@ func newTemplateCache() (map[string]*template.Template, error) {
 		cache[name] = ts
 	}
 	return nil, nil
+}
+
+// render writes a rendered template to the response writer with the given status code.
+// It checks if the template exists, handles errors, and logs issues appropriately.
+// If the template is successfully rendered, its output is written to the response.
+func (app *App) render(w http.ResponseWriter, r *http.Request, name string, data interface{}, status int) {
+
+	// Check if the template with the given name exists in the template cache.
+	// If the template is not found, respond with a server error and stop further processing.
+	t, ok := app.templates[name]
+	if !ok {
+		err := fmt.Errorf("template %s not found", name)
+		app.serverError(w, r, err)
+		return
+	}
+
+	// Create a new buffer to hold the rendered template.
+	// The use of a buffer allows for efficient error handling and ensures that
+	// the template output is only written to the response writer after successful processing.
+	buf := new(bytes.Buffer)
+
+	err := t.ExecuteTemplate(buf, "base", data)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	w.WriteHeader(status)
+
+	_, err = buf.WriteTo(w)
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
 }
