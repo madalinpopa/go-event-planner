@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log/slog"
 	"net/http"
 	"os"
@@ -13,7 +14,8 @@ var (
 )
 
 type config struct {
-	logger *slog.Logger
+	logger    *slog.Logger
+	templates map[string]*template.Template
 }
 
 type App struct {
@@ -27,9 +29,16 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
+	templates, err := newTemplateCache()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+
 	app := App{
 		config: config{
-			logger: logger,
+			logger:    logger,
+			templates: templates,
 		},
 	}
 
