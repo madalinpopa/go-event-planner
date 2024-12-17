@@ -21,7 +21,7 @@ func (app *App) ping(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func home(w http.ResponseWriter, _ *http.Request) {
+func (app *App) home(w http.ResponseWriter, _ *http.Request) {
 	_, err := w.Write([]byte("home"))
 	if err != nil {
 		panic(err)
