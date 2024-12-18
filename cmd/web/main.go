@@ -20,9 +20,15 @@ type config struct {
 	templates map[string]*template.Template
 }
 
+type data struct {
+	Title       string
+	CurrentYear int
+}
+
 // App is a struct that embeds configuration dependencies required across the application.
 type App struct {
 	config
+	data
 }
 
 // main initializes the application, sets up dependencies, and starts the HTTP server listening on the specified port.
@@ -43,6 +49,10 @@ func main() {
 		config: config{
 			logger:    logger,
 			templates: templates,
+		},
+		data: data{
+			Title:       "Event Planner",
+			CurrentYear: time.Now().Year(),
 		},
 	}
 
