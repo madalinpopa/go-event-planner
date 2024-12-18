@@ -2,7 +2,11 @@
 module.exports = {
   content: ["ui/**/*.{tmpl,js}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        pally: ['Pally-Variable']
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
