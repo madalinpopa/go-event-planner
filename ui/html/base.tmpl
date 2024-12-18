@@ -9,12 +9,23 @@
         <link rel="stylesheet" href="/static/css/main.css" type="text/css">
 
         <title>{{ template "title" .}}</title>
+
+        <style>
+            @font-face {
+                font-family: 'Pally-Variable';
+                src: url('/static/fonts/Pally-Variable.woff2') format('woff2'),
+                url('/static/fonts/Pally-Variable.woff') format('woff');
+                font-weight: 400 700;
+                font-display: swap;
+                font-style: normal;
+            }
+        </style>
     </head>
 
     <body>
 
     <header class="text-xl font-bold text-center">
-        <p class="text-2xl">Welcome</p>
+        {{template "nav" .}}
     </header>
 
     <main>
