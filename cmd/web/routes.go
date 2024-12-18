@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/justinas/alice"
 	"github.com/madalinpopa/go-event-planner/ui"
 	"net/http"
 )
@@ -18,5 +19,8 @@ func (app *App) routes() http.Handler {
 	mux.HandleFunc("GET /{$}", app.home)
 	mux.HandleFunc("GET /ping", app.ping)
 
-	return mux
+	// Initialize middleware chain with panic recovery, request logging, and common headers.
+	standardMiddleware := alice.New(app.addPanicRecover, app.addRequestLogger, app.addCommonHeaders)
+
+	return standardMiddleware.Then(mux)
 }
