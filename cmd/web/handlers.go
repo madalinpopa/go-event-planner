@@ -21,6 +21,7 @@ func (app *App) ping(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// home renders the home template and responds with an HTTP 200 status. It does not take or process any additional data.
 func (app *App) home(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "home.tmpl", nil, http.StatusOK)
 }
