@@ -1,8 +1,11 @@
 package main
 
 import (
+	"errors"
+	"github.com/madalinpopa/go-event-planner/internal/models"
 	"net/http"
 	"runtime/debug"
+	"strconv"
 )
 
 // ping handles the /ping endpoint, responding with "pong" to indicate the service is available and operational.
@@ -24,4 +27,27 @@ func (app *App) ping(w http.ResponseWriter, r *http.Request) {
 // home renders the home template and responds with an HTTP 200 status. It does not take or process any additional data.
 func (app *App) home(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "home.tmpl", app.data, http.StatusOK)
+}
+
+func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	event, err := app.eventModel.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
+
+	// Assign the retrieved event data to the application data structure.
+	app.data.Event = event
+
+	app.render(w, r, "events/detail.tmpl", app.data, http.StatusOK)
 }
