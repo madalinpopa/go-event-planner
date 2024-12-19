@@ -18,6 +18,7 @@ func (app *App) routes() http.Handler {
 	// Additional routes can be added here as needed.
 	mux.HandleFunc("GET /{$}", app.home)
 	mux.HandleFunc("GET /ping", app.ping)
+	mux.HandleFunc("GET /events/detail/{id}", app.eventDetail)
 
 	// Initialize middleware chain with panic recovery, request logging, and common headers.
 	standardMiddleware := alice.New(app.addPanicRecover, app.addRequestLogger, app.addCommonHeaders)
