@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/madalinpopa/go-event-planner/internal/models"
 	"net/http"
 	"runtime/debug"
@@ -26,7 +27,16 @@ func (app *App) ping(w http.ResponseWriter, r *http.Request) {
 
 // home renders the home template and responds with an HTTP 200 status. It does not take or process any additional data.
 func (app *App) home(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "home.tmpl", app.data, http.StatusOK)
+
+	events, err := app.eventModel.GetAll()
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+	app.context.Events = events
+	fmt.Println(events)
+
+	app.render(w, r, "home.tmpl", app.context, http.StatusOK)
 }
 
 func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
@@ -47,7 +57,7 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Assign the retrieved event data to the application data structure.
-	app.data.Event = event
+	app.context.Event = event
 
-	app.render(w, r, "events/detail.tmpl", app.data, http.StatusOK)
+	app.render(w, r, "events/detail.tmpl", app.context, http.StatusOK)
 }
