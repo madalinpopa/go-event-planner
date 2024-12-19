@@ -26,3 +26,7 @@ go.work.sum
 .idea
 ui/static/css/
 tmp
+
+# Ignore any database file
+**/*.db
+**/*.sqlite3
