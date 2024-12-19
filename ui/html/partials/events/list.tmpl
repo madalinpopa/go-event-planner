@@ -1,0 +1,10 @@
+{{define "events"}}
+    {{with .Events}}
+        {{range .}}
+            <div class="p-4 py-4">
+                <h1 class="font-bold text-xl">{{.Title}}</h1>
+                <p>{{.Description}}</p>
+            </div>
+        {{end}}
+    {{end}}
+{{end}}
