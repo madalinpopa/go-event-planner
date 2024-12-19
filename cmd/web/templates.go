@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -23,28 +24,42 @@ var functions = template.FuncMap{
 
 // newTemplateCache initializes and returns a cache of precompiled templates, or an error if the operation fails.
 func newTemplateCache() (map[string]*template.Template, error) {
-	cache := make(map[string]*template.Template)
+	cache := map[string]*template.Template{}
 
-	pages, err := fs.Glob(ui.Files, "html/pages/*.tmpl")
-	if err != nil {
-		return nil, err
-	}
+	// Walk through all files in the embedded filesystem
+	err := fs.WalkDir(ui.Files, "html/pages", func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
 
-	for _, page := range pages {
-		name := filepath.Base(page)
+		// Skip if it's a directory or not a template file
+		if d.IsDir() || !strings.HasSuffix(path, ".tmpl") {
+			return nil
+		}
+
+		// Generate cache key by removing "html/pages/" prefix and maintaining subdirectory structure
+		name := strings.TrimPrefix(path, "html/pages/")
 
 		patterns := []string{
 			"html/base.tmpl",
 			"html/partials/*.tmpl",
-			page,
+			path,
 		}
 
-		ts, err := template.New(name).Funcs(functions).ParseFS(ui.Files, patterns...)
+		ts, err := template.New(filepath.Base(path)).Funcs(functions).ParseFS(ui.Files, patterns...)
 		if err != nil {
-			return nil, err
+			return fmt.Errorf("parsing template %s: %w", path, err)
 		}
+
 		cache[name] = ts
+		fmt.Printf("Cached template: %s\n", name)
+		return nil
+	})
+
+	if err != nil {
+		return nil, fmt.Errorf("walking pages directory: %w", err)
 	}
+
 	return cache, nil
 }
 
