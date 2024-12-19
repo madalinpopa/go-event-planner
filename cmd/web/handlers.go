@@ -60,3 +60,8 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 
 	app.render(w, r, "events/detail.tmpl", app.context, http.StatusOK)
 }
+
+// eventCreate renders the "create event" template and responds with an HTTP 200 status. It does not process input data.
+func (app *App) eventCreate(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "events/create.tmpl", app.context, http.StatusOK)
+}
