@@ -11,8 +11,10 @@ type Event struct {
 	Id          int
 	Title       string
 	Description string
-	EventDate   time.Time
 	Location    string
+	EventDate   time.Time
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 // EventModel provides methods for managing and interacting with events in the database.
@@ -38,9 +40,9 @@ func (m *EventModel) Get(id int) (Event, error) {
 
 	var e Event
 
-	err := row.Scan(&e.Id, &e.Title, &e.Description, &e.EventDate, &e.Location)
+	err := row.Scan(&e.Id, &e.Title, &e.Description, &e.EventDate, &e.Location, &e.CreatedAt, &e.UpdatedAt)
 	if err != nil {
-		if errors.Is(err, ErrNoRecord) {
+		if errors.Is(err, sql.ErrNoRows) {
 			return Event{}, ErrNoRecord
 		} else {
 			return Event{}, err
