@@ -25,7 +25,7 @@ type config struct {
 	db        *sql.DB
 }
 
-type data struct {
+type context struct {
 	Title       string
 	CurrentYear int
 	Events      []models.Event
@@ -36,7 +36,7 @@ type data struct {
 type App struct {
 	eventModel *models.EventModel
 	config
-	data
+	context
 }
 
 // main initializes the application, sets up dependencies, and starts the HTTP server listening on the specified port.
@@ -66,7 +66,7 @@ func main() {
 			templates: templates,
 			db:        db,
 		},
-		data: data{
+		context: context{
 			Title:       "Event Planner",
 			CurrentYear: time.Now().Year(),
 		},
