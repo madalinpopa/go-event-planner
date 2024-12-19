@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"log"
 	"time"
 )
 
@@ -52,6 +53,34 @@ func (m *EventModel) Get(id int) (Event, error) {
 }
 
 // GetAll retrieves all event records from the database and returns them as a slice of Event pointers or an error if it fails.
-func (m *EventModel) GetAll() ([]*Event, error) {
+func (m *EventModel) GetAll() ([]Event, error) {
+	stmt := "SELECT id, title, description, event_date, location, created_at, updated_at FROM events"
+
+	rows, err := m.DB.Query(stmt)
+	if err != nil {
+		return nil, err
+	}
+	defer func(rows *sql.Rows) {
+		err := rows.Close()
+		if err != nil {
+			log.Printf("error closing rows: %v", err)
+		}
+	}(rows)
+
+	var events []Event
+	for rows.Next() {
+
+		var e Event
+		err := rows.Scan(&e.Id, &e.Title, &e.Description, &e.EventDate, &e.Location, &e.CreatedAt, &e.UpdatedAt)
+		if err != nil {
+			return nil, err
+		}
+		events = append(events, e)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
 	return nil, nil
 }
