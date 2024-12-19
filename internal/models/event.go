@@ -2,11 +2,13 @@ package models
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
 // Event represents a scheduled occurrence with a title, description, date, and location.
 type Event struct {
+	Id          int
 	Title       string
 	Description string
 	EventDate   time.Time
@@ -28,8 +30,23 @@ func (m *EventModel) Create(title, description string, eventDate time.Time, loca
 
 // Get retrieves an event from the database by its unique ID.
 // It returns the matching Event object or an error if the query fails or no event is found.
-func (m *EventModel) Get(id int) (*Event, error) {
-	return nil, nil
+func (m *EventModel) Get(id int) (Event, error) {
+
+	stmt := "SELECT * FROM events WHERE id = ?"
+
+	row := m.DB.QueryRow(stmt, id)
+
+	var e Event
+
+	err := row.Scan(&e.Id, &e.Title, &e.Description, &e.EventDate, &e.Location)
+	if err != nil {
+		if errors.Is(err, ErrNoRecord) {
+			return Event{}, ErrNoRecord
+		} else {
+			return Event{}, err
+		}
+	}
+	return e, nil
 }
 
 // GetAll retrieves all event records from the database and returns them as a slice of Event pointers or an error if it fails.
