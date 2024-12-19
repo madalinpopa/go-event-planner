@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"github.com/madalinpopa/go-event-planner/internal/models"
 	"html/template"
 	"log/slog"
 	"net/http"
@@ -31,6 +32,7 @@ type data struct {
 
 // App is a struct that embeds configuration dependencies required across the application.
 type App struct {
+	events *models.EventModel
 	config
 	data
 }
@@ -56,6 +58,7 @@ func main() {
 	}
 
 	app := App{
+		events: &models.EventModel{DB: db},
 		config: config{
 			logger:    logger,
 			templates: templates,
