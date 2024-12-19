@@ -28,11 +28,13 @@ type config struct {
 type data struct {
 	Title       string
 	CurrentYear int
+	Events      []models.Event
+	Event       models.Event
 }
 
 // App is a struct that embeds configuration dependencies required across the application.
 type App struct {
-	events *models.EventModel
+	eventModel *models.EventModel
 	config
 	data
 }
@@ -58,7 +60,7 @@ func main() {
 	}
 
 	app := App{
-		events: &models.EventModel{DB: db},
+		eventModel: &models.EventModel{DB: db},
 		config: config{
 			logger:    logger,
 			templates: templates,
