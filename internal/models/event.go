@@ -28,6 +28,10 @@ type EventModel struct {
 // Create adds a new event record to the database with the provided title, description, date, and location.
 // It returns the ID of the newly created event or an error if the operation fails.
 func (m *EventModel) Create(title, description string, eventDate time.Time, location string) (int, error) {
+	_ = title
+	_ = description
+	_ = eventDate
+	_ = location
 	return 0, nil
 }
 
