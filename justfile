@@ -31,9 +31,9 @@ build:
     tailwindcss -i {{css_input}} -o {{css_output}} --minify
 
 # Run database migrations
-migrations command="status":
+migrate command="up":
     goose sqlite3 {{db_path}} {{command}} --dir={{migrations_dir}}
 
 # Create new migration
-migrations-create name:
+makemigrations name:
     goose sqlite3 {{db_path}} create {{name}} sql --dir={{migrations_dir}}
