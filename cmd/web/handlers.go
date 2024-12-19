@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"github.com/madalinpopa/go-event-planner/internal/models"
 	"net/http"
 	"runtime/debug"
@@ -34,11 +33,11 @@ func (app *App) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.context.Events = events
-	fmt.Println(events)
 
 	app.render(w, r, "home.tmpl", app.context, http.StatusOK)
 }
 
+// eventDetail retrieves the details of a specific event based on the ID from the URL, renders the detail template, and responds.
 func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
