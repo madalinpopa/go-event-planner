@@ -82,5 +82,5 @@ func (m *EventModel) GetAll() ([]Event, error) {
 		return nil, err
 	}
 
-	return nil, nil
+	return events, nil
 }
