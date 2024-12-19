@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var (
@@ -19,6 +21,7 @@ var (
 type config struct {
 	logger    *slog.Logger
 	templates map[string]*template.Template
+	db        *sql.DB
 }
 
 type data struct {
@@ -40,6 +43,12 @@ func main() {
 
 	logger := slog.New(slog.NewTextHandler(os.Stdout, nil))
 
+	db, err := openDB("database/events.db")
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+
 	templates, err := newTemplateCache()
 	if err != nil {
 		logger.Error(err.Error())
@@ -50,6 +59,7 @@ func main() {
 		config: config{
 			logger:    logger,
 			templates: templates,
+			db:        db,
 		},
 		data: data{
 			Title:       "Event Planner",
