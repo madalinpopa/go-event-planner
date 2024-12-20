@@ -2,6 +2,8 @@
 
     <form class="max-w-3xl mx-auto space-y-6" action="/login" method="POST">
 
+        <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
+
         <div class="flex flex-col space-y-2">
             <label for="email">E-mail</label>
             {{with .Form.FieldErrors.email }}
