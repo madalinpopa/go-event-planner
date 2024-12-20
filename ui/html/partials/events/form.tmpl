@@ -3,25 +3,38 @@
 
         <div class="flex flex-col space-y-2">
             <label for="title">Title</label>
+            {{with .Form.FieldErrors }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input required type="text" name="title" id="title">
         </div>
 
         <div class="flex flex-col space-y-2">
             <label for="description">Description</label>
+            {{with .Form.FieldErrors }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input type="text" name="description" id="description">
         </div>
 
         <div class="flex flex-col space-y-2">
             <label for="location">Location</label>
+            {{with .Form.FieldErrors }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input required type="text" name="location" id="location">
         </div>
 
         <div class="flex flex-col space-y-2">
             <label for="eventDate">Event Date</label>
+            {{with .Form.FieldErrors }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input required type="date" name="eventDate" id="eventDate" min="1997-01-01" max="2030-12-31">
         </div>
 
-        <input class="border py-2 px-4 bg-gray-100 transition duration-0 hover:duration-150 rounded text-gray-500 hover:text-gray-700 hover:shadow" type="Submit" value="Create Event">
+        <input class="border py-2 px-4 bg-gray-100 transition duration-0 hover:duration-150 rounded text-gray-500 hover:text-gray-700 hover:shadow"
+               type="Submit" value="Create Event">
 
     </form>
 {{end}}
