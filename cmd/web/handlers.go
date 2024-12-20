@@ -120,3 +120,21 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 
 	http.Redirect(w, r, "/", http.StatusFound)
 }
+
+// userRegister serves the user registration page by rendering the "register.tmpl"
+// template with the application context.
+func (app *App) userRegister(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
+}
+
+// userRegisterPost handles HTTP POST requests for user registration
+// and renders the registration template with the given context.
+func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
+}
+
+// userLogin handles the user login page rendering by serving the login template
+// with the appropriate context and status.
+func (app *App) userLogin(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
+}
