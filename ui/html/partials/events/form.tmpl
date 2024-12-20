@@ -3,7 +3,7 @@
 
         <div class="flex flex-col space-y-2">
             <label for="title">Title</label>
-            <input type="text" name="title" id="title">
+            <input required type="text" name="title" id="title">
         </div>
 
         <div class="flex flex-col space-y-2">
@@ -13,12 +13,12 @@
 
         <div class="flex flex-col space-y-2">
             <label for="location">Location</label>
-            <input type="text" name="location" id="location">
+            <input required type="text" name="location" id="location">
         </div>
 
         <div class="flex flex-col space-y-2">
             <label for="eventDate">Event Date</label>
-            <input type="text" name="eventDate" id="eventDate">
+            <input required type="date" name="eventDate" id="eventDate" min="1997-01-01" max="2030-12-31">
         </div>
 
         <input class="border py-2 px-4 bg-gray-100 transition duration-0 hover:duration-150 rounded text-gray-500 hover:text-gray-700 hover:shadow" type="Submit" value="Create Event">
