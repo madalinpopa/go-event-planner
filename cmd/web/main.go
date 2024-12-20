@@ -84,6 +84,7 @@ func main() {
 
 	app := App{
 		eventModel: &models.EventModel{DB: db},
+		userModel:  &models.UserModel{DB: db},
 		config: config{
 			logger:         logger,
 			templates:      templates,
