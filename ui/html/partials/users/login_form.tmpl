@@ -4,6 +4,9 @@
 
         <div class="flex flex-col space-y-2">
             <label for="email">E-mail</label>
+            {{with .Form.FieldErrors.email }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input type="email" name="email" id="email" />
         </div>
 

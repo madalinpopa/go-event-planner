@@ -4,16 +4,25 @@
 
         <div class="flex flex-col space-y-2">
             <label for="name">Name</label>
+            {{with .Form.FieldErrors.name }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input type="text" name="name" id="name" />
         </div>
 
         <div class="flex flex-col space-y-2">
             <label for="email">E-mail</label>
+            {{with .Form.FieldErrors.email }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input type="email" name="email" id="email" />
         </div>
 
         <div class="flex flex-col space-y-2">
             <label for="password">Password</label>
+            {{with .Form.FieldErrors.password }}
+                <span class="text-red-500 text-sm">* {{.}}</span>
+            {{end}}
             <input type="password" name="password" id="password" />
         </div>
 
