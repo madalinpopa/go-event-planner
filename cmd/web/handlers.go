@@ -3,6 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
+	"github.com/justinas/nosurf"
 	"github.com/madalinpopa/go-event-planner/internal/models"
 	"github.com/madalinpopa/go-event-planner/internal/validator"
 	"net/http"
@@ -35,6 +36,7 @@ func (app *App) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.context.Events = events
+	app.context.CSRFToken = nosurf.Token(r)
 	app.render(w, r, "home.tmpl", app.context, http.StatusOK)
 }
 
