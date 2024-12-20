@@ -11,12 +11,14 @@ func (app *App) addCommonHeaders(next http.Handler) http.Handler {
 
 		// Set Content-Security-Policy to restrict the sources of content such as scripts, styles, and images
 		w.Header().Set("Content-Security-Policy", `
-			default-src 'self';
-			script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
-			style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
-			img-src 'self' https://cdn.jsdelivr.net;
-			font-src 'self' https://cdn.jsdelivr.net;
-		`)
+            default-src 'self';
+            script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://*.iconify.design https://*.simplesvg.com https://*.unisvg.com;
+            style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;
+            img-src 'self' https://cdn.jsdelivr.net https://*.iconify.design https://*.simplesvg.com https://*.unisvg.com;
+            font-src 'self' https://cdn.jsdelivr.net;
+            connect-src 'self' https://*.iconify.design https://*.simplesvg.com https://*.unisvg.com;
+        `)
+
 		// Set Referrer-Policy to control the amount of referrer information sent with requests
 		w.Header().Set("Referrer-Policy", "origin-when-cross-origin")
 
