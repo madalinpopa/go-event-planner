@@ -9,7 +9,7 @@
             {{with .Form.FieldErrors.name }}
                 <span class="text-red-500 text-sm">* {{.}}</span>
             {{end}}
-            <input type="text" name="name" id="name" />
+            <input type="text" name="name" id="name" value="{{.Form.Name}}" />
         </div>
 
         <div class="flex flex-col space-y-2">
@@ -17,7 +17,7 @@
             {{with .Form.FieldErrors.email }}
                 <span class="text-red-500 text-sm">* {{.}}</span>
             {{end}}
-            <input type="email" name="email" id="email" />
+            <input type="email" name="email" id="email" value="{{.Form.Email}}" />
         </div>
 
         <div class="flex flex-col space-y-2">
@@ -25,7 +25,7 @@
             {{with .Form.FieldErrors.password }}
                 <span class="text-red-500 text-sm">* {{.}}</span>
             {{end}}
-            <input type="password" name="password" id="password" />
+            <input type="password" name="password" id="password" value="{{.Form.Password}}" />
         </div>
 
         <input type="submit" value="Register" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer">

@@ -155,6 +155,8 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Println(form)
+
 	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
 }
 
