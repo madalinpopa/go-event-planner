@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"github.com/madalinpopa/go-event-planner/internal/models"
 	"net/http"
 	"runtime/debug"
@@ -73,4 +74,15 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, r, http.StatusBadRequest, err)
 		return
 	}
+
+	var form EventForm
+
+	err = app.formDecoder.Decode(&form, r.PostForm)
+	if err != nil {
+		app.clientError(w, r, http.StatusBadRequest, err)
+		return
+	}
+
+	fmt.Println(form)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
