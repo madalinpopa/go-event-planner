@@ -30,6 +30,7 @@ type config struct {
 type context struct {
 	Title       string
 	CurrentYear int
+	Form        any
 	Events      []models.Event
 	Event       models.Event
 }
