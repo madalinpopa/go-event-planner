@@ -1,11 +1,15 @@
 package validator
 
 import (
+	"regexp"
 	"slices"
 	"strings"
 	"time"
 	"unicode/utf8"
 )
+
+// EmailRX is a compiled regular expression to validate the format of email addresses according to standard RFC 5322 rules.
+var EmailRX = regexp.MustCompile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$")
 
 // Validator is a struct used to validate data and store field-specific error messages.
 type Validator struct {
@@ -31,24 +35,28 @@ func (v *Validator) AddFieldError(key, message string) {
 	}
 }
 
-// CheckField adds a validation error for the specified field if the condition is not met.
+// CheckField adds a validation error for the specified
+// field if the condition is not met.
 func (v *Validator) CheckField(ok bool, key, message string) {
 	if !ok {
 		v.AddFieldError(key, message)
 	}
 }
 
-// NotBlank checks if the provided string is not empty or whitespace-only and returns true if it contains non-whitespace characters.
+// NotBlank checks if the provided string is not empty or whitespace-only
+// and returns true if it contains non-whitespace characters.
 func NotBlank(value string) bool {
 	return strings.TrimSpace(value) != ""
 }
 
-// MaxChars checks if the number of characters in a string is less than or equal to a specified limit.
+// MaxChars checks if the number of characters in a string is
+// less than or equal to a specified limit.
 func MaxChars(value string, n int) bool {
 	return utf8.RuneCountInString(value) <= n
 }
 
-// PermittedValue checks if a given value is present within a list of permitted values and returns true if found.
+// PermittedValue checks if a given value is present within a
+// list of permitted values and returns true if found.
 func PermittedValue[T comparable](value T, permittedValues ...T) bool {
 	return slices.Contains(permittedValues, value)
 }
@@ -60,4 +68,16 @@ func ValidDate(date time.Time) bool {
 		return false
 	}
 	return true
+}
+
+// MinChars checks if the string `value` contains at least `n` characters,
+// returning true if the condition is met.
+func MinChars(value string, n int) bool {
+	return utf8.RuneCountInString(value) >= n
+}
+
+// Matches checks if the given string value matches
+// the specified regular expression pattern.
+func Matches(value string, rx *regexp.Regexp) bool {
+	return rx.MatchString(value)
 }
