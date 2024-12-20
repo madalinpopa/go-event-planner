@@ -86,6 +86,14 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 
 	form.CheckField(validator.NotBlank(form.Title), "title", "This field is required.")
 	form.CheckField(validator.NotBlank(form.Location), "location", "This field is required.")
+	form.CheckField(validator.NotBlank(form.Description), "description", "This field is required.")
+	form.CheckField(validator.ValidDate(form.EventDate), "eventDate", "This field is required.")
+
+	if !form.Valid() {
+		app.Form = form
+		app.render(w, r, "events/create.tmpl", app.context, http.StatusUnprocessableEntity)
+		return
+	}
 
 	fmt.Println(form)
 	http.Redirect(w, r, "/", http.StatusFound)
