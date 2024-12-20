@@ -3,6 +3,7 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"fmt"
 	"log"
 	"time"
 )
@@ -28,11 +29,42 @@ type EventModel struct {
 // Create adds a new event record to the database with the provided title, description, date, and location.
 // It returns the ID of the newly created event or an error if the operation fails.
 func (m *EventModel) Create(title, description string, eventDate time.Time, location string) (int, error) {
-	_ = title
-	_ = description
-	_ = eventDate
-	_ = location
-	return 0, nil
+
+	stmt := `INSERT INTO events (title, description, event_date, location) 
+	VALUES (?, ?, ?, ?)`
+
+	result, err := m.DB.Exec(stmt, title, description, eventDate, location)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
+// Delete removes an event record from the database by its unique ID and returns an error if the operation fails.
+func (m *EventModel) Delete(id int) error {
+	stmt := "DELETE FROM events WHERE id = ?"
+
+	result, err := m.DB.Exec(stmt, id)
+	if err != nil {
+		return fmt.Errorf("failed to execute delete query: %w", err)
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("failed to fetch rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no event found with id: %d", id)
+	}
+
+	return nil
 }
 
 // Get retrieves an event from the database by its unique ID.
