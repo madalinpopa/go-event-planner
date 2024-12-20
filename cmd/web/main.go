@@ -17,11 +17,13 @@ import (
 )
 
 var (
-	// port defines the default port the server listens on, typically overridden via a command-line flag.
+	// port defines the default port the server listens on,
+	// typically overridden via a command-line flag.
 	port string
 )
 
-// config is a struct that encapsulates application-wide dependencies, such as logging and template rendering.
+// config is a struct that encapsulates application-wide dependencies,
+// such as logging and template rendering.
 type config struct {
 	db             *sql.DB
 	logger         *slog.Logger
@@ -30,10 +32,13 @@ type config struct {
 	sessionManager *scs.SessionManager
 }
 
+// context holds common data shared between application layers for
+// rendering templates or handling requests.
 type context struct {
 	Title       string
 	CurrentYear int
 	Form        any
+	User        models.User
 	Event       models.Event
 	Events      []models.Event
 	CSRFToken   string
@@ -42,11 +47,13 @@ type context struct {
 // App is a struct that embeds configuration dependencies required across the application.
 type App struct {
 	eventModel *models.EventModel
+	userModel  *models.UserModel
 	config
 	context
 }
 
-// main initializes the application, sets up dependencies, and starts the HTTP server listening on the specified port.
+// main initializes the application, sets up dependencies, and starts
+// the HTTP server listening on the specified port.
 func main() {
 
 	flag.StringVar(&port, "port", "4000", "port to listen on")
