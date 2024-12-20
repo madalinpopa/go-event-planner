@@ -1,10 +1,24 @@
 {{define "events"}}
+
     {{with .Events}}
         {{range .}}
-            <div class="p-4 py-4">
-                <h1 class="font-bold text-xl">{{.Title}}</h1>
-                <p>{{.Description}}</p>
+            <div class="flex justify-between">
+                <div class="p-4 py-4">
+                    <h1 class="font-bold text-xl">{{.Title}}</h1>
+                    <p>{{.Description}}</p>
+                    <p>{{.EventDate}}</p>
+                </div>
+
+                <div>
+                    <form action="/events/{{.Id}}/delete" method="POST">
+                        <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                            <iconify-icon icon="mingcute:delete-line" width="24" height="24"></iconify-icon>
+                        </button>
+                    </form>
+                </div>
+
             </div>
+
         {{end}}
     {{end}}
 {{end}}
