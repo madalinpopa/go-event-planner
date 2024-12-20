@@ -138,3 +138,13 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 func (app *App) userLogin(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
 }
+
+// userLoginPost handles POST requests for user login, rendering the login page
+// with the provided context and HTTP status OK.
+func (app *App) userLoginPost(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
+}
+
+func (app *App) userLogout(w http.ResponseWriter, r *http.Request) {
+	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
+}
