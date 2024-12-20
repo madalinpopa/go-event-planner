@@ -35,7 +35,6 @@ func (app *App) home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	app.context.Events = events
-
 	app.render(w, r, "home.tmpl", app.context, http.StatusOK)
 }
 
@@ -65,7 +64,26 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 
 // eventCreate renders the "create event" template and responds with an HTTP 200 status. It does not process input data.
 func (app *App) eventCreate(w http.ResponseWriter, r *http.Request) {
+	app.Form = EventForm{}
 	app.render(w, r, "events/create.tmpl", app.context, http.StatusOK)
+}
+
+// eventDelete handles the deletion of an event record based on the ID extracted from the URL path.
+// It returns a 404 Not Found error if the ID is invalid or the event does not exist.
+// Logs internal errors and redirects to the home page upon successful deletion.
+func (app *App) eventDelete(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	err = app.eventModel.Delete(id)
+	if err != nil {
+		app.logger.Error(err.Error())
+		app.serverError(w, r, err)
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // eventCreatePost handles the POST request for creating an event, parses the form data, and validates the request.
@@ -86,15 +104,17 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 
 	form.CheckField(validator.NotBlank(form.Title), "title", "This field is required.")
 	form.CheckField(validator.NotBlank(form.Location), "location", "This field is required.")
-	form.CheckField(validator.NotBlank(form.Description), "description", "This field is required.")
 	form.CheckField(validator.ValidDate(form.EventDate), "eventDate", "This field is required.")
 
 	if !form.Valid() {
+		fmt.Println(form)
 		app.Form = form
 		app.render(w, r, "events/create.tmpl", app.context, http.StatusUnprocessableEntity)
 		return
 	}
 
-	fmt.Println(form)
+	id, err := app.eventModel.Create(form.Title, form.Description, form.EventDate, form.Location)
+	fmt.Println(id, err)
+
 	http.Redirect(w, r, "/", http.StatusFound)
 }
