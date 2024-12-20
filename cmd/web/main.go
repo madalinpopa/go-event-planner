@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"github.com/go-playground/form/v4"
 	"github.com/madalinpopa/go-event-planner/internal/models"
 	"html/template"
 	"log/slog"
@@ -20,9 +21,10 @@ var (
 
 // config is a struct that encapsulates application-wide dependencies, such as logging and template rendering.
 type config struct {
-	logger    *slog.Logger
-	templates map[string]*template.Template
-	db        *sql.DB
+	logger      *slog.Logger
+	templates   map[string]*template.Template
+	db          *sql.DB
+	formDecoder *form.Decoder
 }
 
 type context struct {
@@ -59,12 +61,18 @@ func main() {
 		os.Exit(1)
 	}
 
+	formDecoder := form.NewDecoder()
+	formDecoder.RegisterCustomTypeFunc(func(vals []string) (interface{}, error) {
+		return time.Parse("2006-01-02", vals[0])
+	}, time.Time{})
+
 	app := App{
 		eventModel: &models.EventModel{DB: db},
 		config: config{
-			logger:    logger,
-			templates: templates,
-			db:        db,
+			logger:      logger,
+			templates:   templates,
+			db:          db,
+			formDecoder: formDecoder,
 		},
 		context: context{
 			Title:       "Event Planner",
