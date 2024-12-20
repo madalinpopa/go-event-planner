@@ -3,6 +3,8 @@ package main
 import (
 	"database/sql"
 	"flag"
+	"github.com/alexedwards/scs/sqlite3store"
+	"github.com/alexedwards/scs/v2"
 	"github.com/go-playground/form/v4"
 	"github.com/madalinpopa/go-event-planner/internal/models"
 	"html/template"
@@ -21,18 +23,20 @@ var (
 
 // config is a struct that encapsulates application-wide dependencies, such as logging and template rendering.
 type config struct {
-	logger      *slog.Logger
-	templates   map[string]*template.Template
-	db          *sql.DB
-	formDecoder *form.Decoder
+	db             *sql.DB
+	logger         *slog.Logger
+	templates      map[string]*template.Template
+	formDecoder    *form.Decoder
+	sessionManager *scs.SessionManager
 }
 
 type context struct {
 	Title       string
 	CurrentYear int
 	Form        any
-	Events      []models.Event
 	Event       models.Event
+	Events      []models.Event
+	CSRFToken   string
 }
 
 // App is a struct that embeds configuration dependencies required across the application.
@@ -67,13 +71,18 @@ func main() {
 		return time.Parse("2006-01-02", vals[0])
 	}, time.Time{})
 
+	sessionManager := scs.New()
+	sessionManager.Store = sqlite3store.New(db)
+	sessionManager.Lifetime = 12 * time.Hour
+
 	app := App{
 		eventModel: &models.EventModel{DB: db},
 		config: config{
-			logger:      logger,
-			templates:   templates,
-			db:          db,
-			formDecoder: formDecoder,
+			logger:         logger,
+			templates:      templates,
+			db:             db,
+			formDecoder:    formDecoder,
+			sessionManager: sessionManager,
 		},
 		context: context{
 			Title:       "Event Planner",
