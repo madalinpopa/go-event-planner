@@ -65,3 +65,12 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 func (app *App) eventCreate(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "events/create.tmpl", app.context, http.StatusOK)
 }
+
+// eventCreatePost handles the POST request for creating an event, parses the form data, and validates the request.
+func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		app.clientError(w, r, http.StatusBadRequest, err)
+		return
+	}
+}
