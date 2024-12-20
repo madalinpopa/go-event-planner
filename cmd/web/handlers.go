@@ -161,6 +161,7 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 // userLogin handles the user login page rendering by serving the login template
 // with the appropriate context and status.
 func (app *App) userLogin(w http.ResponseWriter, r *http.Request) {
+	app.context.CSRFToken = nosurf.Token(r)
 	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
 }
 
