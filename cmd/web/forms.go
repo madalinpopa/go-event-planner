@@ -5,6 +5,11 @@ import (
 	"time"
 )
 
+type Form interface {
+	CheckField(err error, field string, message string)
+	Valid() bool
+}
+
 type EventForm struct {
 	Title               string    `form:"title"`
 	Description         string    `form:"description"`
