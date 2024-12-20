@@ -124,12 +124,37 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 // userRegister serves the user registration page by rendering the "register.tmpl"
 // template with the application context.
 func (app *App) userRegister(w http.ResponseWriter, r *http.Request) {
+	form := UserRegisterForm{}
+	app.context.Form = form
 	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
 }
 
 // userRegisterPost handles HTTP POST requests for user registration
 // and renders the registration template with the given context.
 func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
+	app.context.CSRFToken = nosurf.Token(r)
+
+	var form UserRegisterForm
+
+	err := app.formDecoder.Decode(&form, r.PostForm)
+	if err != nil {
+		app.clientError(w, r, http.StatusBadRequest, err)
+		return
+	}
+
+	form.CheckField(validator.NotBlank(form.Name), "name", "This field is required.")
+	form.CheckField(validator.NotBlank(form.Email), "email", "This field is required.")
+	form.CheckField(validator.Matches(form.Email, validator.EmailRX), "email", "The email address is not valid.")
+	form.CheckField(validator.NotBlank(form.Password), "password", "This field is required.")
+	form.CheckField(validator.MinChars(form.Password, 8), "password", "Password must be at least 8 characters.")
+
+	if !form.Valid() {
+		app.Form = form
+		fmt.Println(form.FieldErrors)
+		app.render(w, r, "register.tmpl", app.context, http.StatusUnprocessableEntity)
+		return
+	}
+
 	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
 }
 
