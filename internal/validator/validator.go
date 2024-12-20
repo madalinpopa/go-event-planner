@@ -53,10 +53,10 @@ func PermittedValue[T comparable](value T, permittedValues ...T) bool {
 	return slices.Contains(permittedValues, value)
 }
 
-// ValidDate checks if a given date string is in the valid "YYYY-MM-DD" format and returns true if valid, otherwise false.
-func ValidDate(date string) bool {
-	_, err := time.Parse("2006-01-02", date)
-	if err != nil {
+// ValidDate checks if the provided date string represents a valid,
+// non-zero date and returns true if valid, otherwise false.
+func ValidDate(date time.Time) bool {
+	if date.IsZero() {
 		return false
 	}
 	return true
