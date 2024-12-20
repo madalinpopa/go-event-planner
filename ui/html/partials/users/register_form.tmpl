@@ -1,5 +1,23 @@
 {{define "registerForm"}}
 
-    <h1>Register form</h1>
+    <form class="max-w-3xl mx-auto space-y-6" action="/register" method="POST">
+
+        <div class="flex flex-col space-y-2">
+            <label for="name">Name</label>
+            <input type="text" name="name" id="name" />
+        </div>
+
+        <div class="flex flex-col space-y-2">
+            <label for="email">E-mail</label>
+            <input type="email" name="email" id="email" />
+        </div>
+
+        <div class="flex flex-col space-y-2">
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password" />
+        </div>
+
+        <input type="submit" value="Register" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer">
+    </form>
 
 {{end}}
