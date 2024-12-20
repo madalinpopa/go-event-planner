@@ -15,13 +15,16 @@ func (app *App) routes() http.Handler {
 	// Serve static files from the embedded filesystem under the /static/ path.
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
+	// Use the nosurf middleware on all 'csrfProtect' routes.
+	csrfProtect := alice.New(app.sessionManager.LoadAndSave, csrfToken)
+
 	// Additional routes can be added here as needed.
-	mux.HandleFunc("GET /{$}", app.home)
-	mux.HandleFunc("GET /ping", app.ping)
-	mux.HandleFunc("GET /events/detail/{id}", app.eventDetail)
-	mux.HandleFunc("GET /events/create", app.eventCreate)
-	mux.HandleFunc("POST /events/create", app.eventCreatePost)
-	mux.HandleFunc("POST /events/{id}/delete", app.eventDelete)
+	mux.Handle("GET /{$}", csrfProtect.ThenFunc(app.home))
+	mux.Handle("GET /ping", csrfProtect.ThenFunc(app.ping))
+	mux.Handle("GET /events/detail/{id}", csrfProtect.ThenFunc(app.eventDetail))
+	mux.Handle("GET /events/create", csrfProtect.ThenFunc(app.eventCreate))
+	mux.Handle("POST /events/create", csrfProtect.ThenFunc(app.eventCreatePost))
+	mux.Handle("POST /events/{id}/delete", csrfProtect.ThenFunc(app.eventDelete))
 
 	// Initialize middleware chain with panic recovery, request logging, and common headers.
 	standardMiddleware := alice.New(app.addPanicRecover, app.addRequestLogger, app.addCommonHeaders)
