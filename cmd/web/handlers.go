@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/madalinpopa/go-event-planner/internal/models"
+	"github.com/madalinpopa/go-event-planner/internal/validator"
 	"net/http"
 	"runtime/debug"
 	"strconv"
@@ -82,6 +83,9 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 		app.clientError(w, r, http.StatusBadRequest, err)
 		return
 	}
+
+	form.CheckField(validator.NotBlank(form.Title), "title", "This field is required.")
+	form.CheckField(validator.NotBlank(form.Location), "location", "This field is required.")
 
 	fmt.Println(form)
 	http.Redirect(w, r, "/", http.StatusFound)
