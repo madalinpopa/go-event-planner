@@ -10,3 +10,5 @@ require (
 	github.com/justinas/nosurf v1.1.1
 	github.com/mattn/go-sqlite3 v1.14.24
 )
+
+require golang.org/x/crypto v0.31.0 // indirect
