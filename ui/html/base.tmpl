@@ -33,6 +33,8 @@
         </header>
 
         <main class="h-full">
+            <!-- Display the flash message if one exists -->
+            {{template "flash".}}
             {{template "main" .}}
         </main>
 
