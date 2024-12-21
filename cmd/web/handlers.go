@@ -225,7 +225,17 @@ func (app *App) userLoginPost(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-func (app *App) userLogout(w http.ResponseWriter, r *http.Request) {
-	app.context.CSRFToken = nosurf.Token(r)
-	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
+func (app *App) userLogoutPost(w http.ResponseWriter, r *http.Request) {
+
+	// Renew session token
+	err := app.sessionManager.RenewToken(r.Context())
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	// Remove authenticated user id
+	app.sessionManager.Remove(r.Context(), "authenticatedUserID")
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
