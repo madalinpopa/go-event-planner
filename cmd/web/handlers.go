@@ -138,6 +138,7 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 
 	err := app.formDecoder.Decode(&form, r.PostForm)
 	if err != nil {
+		app.logger.Error(err.Error())
 		app.clientError(w, r, http.StatusBadRequest, err)
 		return
 	}
@@ -155,9 +156,19 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println(form)
-
-	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
+	err = app.userModel.Create(form.Name, form.Email, form.Password)
+	if err != nil {
+		if errors.Is(err, models.ErrDuplicateEmail) {
+			form.AddFieldError("email", "This email address is already registered.")
+			app.Form = form
+			app.render(w, r, "register.tmpl", app.context, http.StatusUnprocessableEntity)
+		} else {
+			app.logger.Error(err.Error())
+			app.serverError(w, r, err)
+		}
+		return
+	}
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 // userLogin handles the user login page rendering by serving the login template
