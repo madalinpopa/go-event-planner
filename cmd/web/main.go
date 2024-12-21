@@ -41,6 +41,7 @@ type data struct {
 	User            models.User
 	Event           models.Event
 	Events          []models.Event
+	Flash           string
 	CSRFToken       string
 	IsAuthenticated bool
 }
