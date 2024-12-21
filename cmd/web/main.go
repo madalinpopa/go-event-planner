@@ -35,13 +35,14 @@ type config struct {
 // data holds common data shared between application layers for
 // rendering templates or handling requests.
 type data struct {
-	Title       string
-	CurrentYear int
-	Form        any
-	User        models.User
-	Event       models.Event
-	Events      []models.Event
-	CSRFToken   string
+	Title           string
+	CurrentYear     int
+	Form            any
+	User            models.User
+	Event           models.Event
+	Events          []models.Event
+	CSRFToken       string
+	IsAuthenticated bool
 }
 
 // App is a struct that embeds configuration dependencies required across the application.
