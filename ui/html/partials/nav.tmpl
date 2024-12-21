@@ -17,24 +17,28 @@
 
                     <div class="text-base font-pally flex items-center gap-4 font-light tracking-wide">
 
-                        <a class="hover:text-blue-400" href="/login">Login</a>
 
-                        <a class="hover:text-blue-400" href="/register">Register</a>
+                        {{if .IsAuthenticated}}
+                            <form action="/logout" method="post">
+                                <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
+                                <button class="hover:text-blue-400" type="submit">Logout</button>
+                            </form>
+                        {{else}}
+                            <a class="hover:text-blue-400" href="/login">Login</a>
 
-
-                        <form action="/logout" method="post">
-                            <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
-                            <button class="hover:text-blue-400" type="submit">Logout</button>
-                        </form>
+                            <a class="hover:text-blue-400" href="/register">Register</a>
+                        {{end}}
 
                     </div>
 
-                    <a href="/events/create"
-                       class="transition duration-0 hover:duration-150 bg-blue-500 font-pally px-4 py-2 text-base text-white rounded flex items-center hover:bg-blue-600 hover:shadow-lg">
-                        <iconify-icon icon="material-symbols:add-rounded" width="24" height="24"
-                                      class="mr-2"></iconify-icon>
-                        New Event
-                    </a>
+                    {{if .IsAuthenticated}}
+                        <a href="/events/create"
+                           class="transition duration-0 hover:duration-150 bg-blue-500 font-pally px-4 py-2 text-base text-white rounded flex items-center hover:bg-blue-600 hover:shadow-lg">
+                            <iconify-icon icon="material-symbols:add-rounded" width="24" height="24"
+                                          class="mr-2"></iconify-icon>
+                            New Event
+                        </a>
+                    {{end}}
 
                 </div>
 
