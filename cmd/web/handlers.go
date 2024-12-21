@@ -35,9 +35,11 @@ func (app *App) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
+	authenticated := app.isAuthenticated(r)
+
 	app.data.Events = events
 	app.data.CSRFToken = nosurf.Token(r)
-	app.IsAuthenticated = app.isAuthenticated(r)
+	app.IsAuthenticated = authenticated
 	app.render(w, r, "home.tmpl", app.data, http.StatusOK)
 }
 
