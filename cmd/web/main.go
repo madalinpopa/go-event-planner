@@ -32,9 +32,9 @@ type config struct {
 	sessionManager *scs.SessionManager
 }
 
-// context holds common data shared between application layers for
+// data holds common data shared between application layers for
 // rendering templates or handling requests.
-type context struct {
+type data struct {
 	Title       string
 	CurrentYear int
 	Form        any
@@ -49,7 +49,7 @@ type App struct {
 	eventModel *models.EventModel
 	userModel  *models.UserModel
 	config
-	context
+	data
 }
 
 // main initializes the application, sets up dependencies, and starts
@@ -92,7 +92,7 @@ func main() {
 			formDecoder:    formDecoder,
 			sessionManager: sessionManager,
 		},
-		context: context{
+		data: data{
 			Title:       "Event Planner",
 			CurrentYear: time.Now().Year(),
 		},
