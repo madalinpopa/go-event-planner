@@ -4,6 +4,10 @@
 
         <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
 
+        {{range .Form.NonFieldErrors}}
+            <div class='text-red-500 text-sm'>{{.}}</div>
+        {{end}}
+
         <div class="flex flex-col space-y-2">
             <label for="email">E-mail</label>
             {{with .Form.FieldErrors.email }}
