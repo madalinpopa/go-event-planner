@@ -35,9 +35,9 @@ func (app *App) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, r, err)
 		return
 	}
-	app.context.Events = events
-	app.context.CSRFToken = nosurf.Token(r)
-	app.render(w, r, "home.tmpl", app.context, http.StatusOK)
+	app.data.Events = events
+	app.data.CSRFToken = nosurf.Token(r)
+	app.render(w, r, "home.tmpl", app.data, http.StatusOK)
 }
 
 // eventDetail retrieves the details of a specific event based on the ID from the URL, renders the detail template, and responds.
@@ -59,15 +59,15 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Assign the retrieved event data to the application data structure.
-	app.context.Event = event
+	app.data.Event = event
 
-	app.render(w, r, "events/detail.tmpl", app.context, http.StatusOK)
+	app.render(w, r, "events/detail.tmpl", app.data, http.StatusOK)
 }
 
 // eventCreate renders the "create event" template and responds with an HTTP 200 status. It does not process input data.
 func (app *App) eventCreate(w http.ResponseWriter, r *http.Request) {
 	app.Form = EventForm{}
-	app.render(w, r, "events/create.tmpl", app.context, http.StatusOK)
+	app.render(w, r, "events/create.tmpl", app.data, http.StatusOK)
 }
 
 // eventDelete handles the deletion of an event record based on the ID extracted from the URL path.
@@ -111,7 +111,7 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 	if !form.Valid() {
 		fmt.Println(form)
 		app.Form = form
-		app.render(w, r, "events/create.tmpl", app.context, http.StatusUnprocessableEntity)
+		app.render(w, r, "events/create.tmpl", app.data, http.StatusUnprocessableEntity)
 		return
 	}
 
@@ -122,17 +122,17 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 }
 
 // userRegister serves the user registration page by rendering the "register.tmpl"
-// template with the application context.
+// template with the application data.
 func (app *App) userRegister(w http.ResponseWriter, r *http.Request) {
-	app.context.Form = UserRegisterForm{}
-	app.context.CSRFToken = nosurf.Token(r)
-	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
+	app.data.Form = UserRegisterForm{}
+	app.data.CSRFToken = nosurf.Token(r)
+	app.render(w, r, "register.tmpl", app.data, http.StatusOK)
 }
 
 // userRegisterPost handles HTTP POST requests for user registration
-// and renders the registration template with the given context.
+// and renders the registration template with the given data.
 func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
-	app.context.CSRFToken = nosurf.Token(r)
+	app.data.CSRFToken = nosurf.Token(r)
 
 	var form UserRegisterForm
 
@@ -152,7 +152,7 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 	if !form.Valid() {
 		app.Form = form
 		fmt.Println(form.FieldErrors)
-		app.render(w, r, "register.tmpl", app.context, http.StatusUnprocessableEntity)
+		app.render(w, r, "register.tmpl", app.data, http.StatusUnprocessableEntity)
 		return
 	}
 
@@ -161,7 +161,7 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, models.ErrDuplicateEmail) {
 			form.AddFieldError("email", "This email address is already registered.")
 			app.Form = form
-			app.render(w, r, "register.tmpl", app.context, http.StatusUnprocessableEntity)
+			app.render(w, r, "register.tmpl", app.data, http.StatusUnprocessableEntity)
 		} else {
 			app.logger.Error(err.Error())
 			app.serverError(w, r, err)
@@ -172,17 +172,17 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 }
 
 // userLogin handles the user login page rendering by serving the login template
-// with the appropriate context and status.
+// with the appropriate data and status.
 func (app *App) userLogin(w http.ResponseWriter, r *http.Request) {
-	app.context.Form = UserLoginForm{}
-	app.context.CSRFToken = nosurf.Token(r)
-	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
+	app.data.Form = UserLoginForm{}
+	app.data.CSRFToken = nosurf.Token(r)
+	app.render(w, r, "login.tmpl", app.data, http.StatusOK)
 }
 
 // userLoginPost handles POST requests for user login, rendering the login page
-// with the provided context and HTTP status OK.
+// with the provided data and HTTP status OK.
 func (app *App) userLoginPost(w http.ResponseWriter, r *http.Request) {
-	app.context.CSRFToken = nosurf.Token(r)
+	app.data.CSRFToken = nosurf.Token(r)
 
 	form := UserLoginForm{}
 	err := app.formDecoder.Decode(&form, r.PostForm)
@@ -198,7 +198,7 @@ func (app *App) userLoginPost(w http.ResponseWriter, r *http.Request) {
 
 	if !form.Valid() {
 		app.Form = form
-		app.render(w, r, "login.tmpl", app.context, http.StatusUnprocessableEntity)
+		app.render(w, r, "login.tmpl", app.data, http.StatusUnprocessableEntity)
 		return
 	}
 
@@ -207,7 +207,7 @@ func (app *App) userLoginPost(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, models.ErrInvalidCredentials) {
 			form.AddNonFieldError("Invalid email or password.")
 			app.Form = form
-			app.render(w, r, "login.tmpl", app.context, http.StatusUnprocessableEntity)
+			app.render(w, r, "login.tmpl", app.data, http.StatusUnprocessableEntity)
 		} else {
 			app.serverError(w, r, err)
 		}
