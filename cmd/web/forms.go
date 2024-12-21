@@ -21,3 +21,10 @@ type UserRegisterForm struct {
 	Password            string `form:"password"`
 	validator.Validator `form:"-"`
 }
+
+// UserLoginForm represents the structure for capturing user login credentials and validation state.
+type UserLoginForm struct {
+	Email               string `form:"email"`
+	Password            string `form:"password"`
+	validator.Validator `form:"-"`
+}
