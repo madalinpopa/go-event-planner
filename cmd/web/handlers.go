@@ -106,6 +106,7 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 
 	form.CheckField(validator.NotBlank(form.Title), "title", "This field is required.")
 	form.CheckField(validator.NotBlank(form.Location), "location", "This field is required.")
+	form.CheckField(validator.MaxChars(form.Description, 255), "description", "The description must be less than 255 characters.")
 	form.CheckField(validator.ValidDate(form.EventDate), "eventDate", "This field is required.")
 
 	if !form.Valid() {
