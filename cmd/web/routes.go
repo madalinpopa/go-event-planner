@@ -31,7 +31,7 @@ func (app *App) routes() http.Handler {
 	mux.Handle("POST /login", csrfProtect.ThenFunc(app.userLoginPost))
 	mux.Handle("GET /register", csrfProtect.ThenFunc(app.userRegister))
 	mux.Handle("POST /register", csrfProtect.ThenFunc(app.userRegisterPost))
-	mux.Handle("POST /logout", csrfProtect.ThenFunc(app.userLogout))
+	mux.Handle("POST /logout", csrfProtect.ThenFunc(app.userLogoutPost))
 
 	// Initialize middleware chain with panic recovery, request logging, and common headers.
 	standardMiddleware := alice.New(app.addPanicRecover, app.addRequestLogger, app.addCommonHeaders)
