@@ -16,22 +16,26 @@ func (app *App) routes() http.Handler {
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
 	// Use the nosurf middleware on all 'csrfProtect' routes.
-	csrfProtect := alice.New(app.sessionManager.LoadAndSave, csrfToken)
+	dynamic := alice.New(app.sessionManager.LoadAndSave, csrfToken, app.authenticate)
 
-	// Additional routes can be added here as needed.
-	mux.Handle("GET /{$}", csrfProtect.ThenFunc(app.home))
-	mux.Handle("GET /ping", csrfProtect.ThenFunc(app.ping))
-	mux.Handle("GET /events/detail/{id}", csrfProtect.ThenFunc(app.eventDetail))
-	mux.Handle("GET /events/create", csrfProtect.ThenFunc(app.eventCreate))
-	mux.Handle("POST /events/create", csrfProtect.ThenFunc(app.eventCreatePost))
-	mux.Handle("POST /events/{id}/delete", csrfProtect.ThenFunc(app.eventDelete))
+	protected := dynamic.Append(app.loginRequired)
+
+	// Public routes
+	mux.Handle("GET /{$}", dynamic.ThenFunc(app.home))
+	mux.Handle("GET /ping", dynamic.ThenFunc(app.ping))
+	mux.Handle("GET /events/detail/{id}", dynamic.ThenFunc(app.eventDetail))
+
+	// Protected routes
+	mux.Handle("GET /events/create", protected.ThenFunc(app.eventCreate))
+	mux.Handle("POST /events/create", protected.ThenFunc(app.eventCreatePost))
+	mux.Handle("POST /events/{id}/delete", protected.ThenFunc(app.eventDelete))
 
 	// User registration and authentication routes
-	mux.Handle("GET /login", csrfProtect.ThenFunc(app.userLogin))
-	mux.Handle("POST /login", csrfProtect.ThenFunc(app.userLoginPost))
-	mux.Handle("GET /register", csrfProtect.ThenFunc(app.userRegister))
-	mux.Handle("POST /register", csrfProtect.ThenFunc(app.userRegisterPost))
-	mux.Handle("POST /logout", csrfProtect.ThenFunc(app.userLogoutPost))
+	mux.Handle("GET /login", dynamic.ThenFunc(app.userLogin))
+	mux.Handle("POST /login", dynamic.ThenFunc(app.userLoginPost))
+	mux.Handle("GET /register", dynamic.ThenFunc(app.userRegister))
+	mux.Handle("POST /register", dynamic.ThenFunc(app.userRegisterPost))
+	mux.Handle("POST /logout", dynamic.ThenFunc(app.userLogoutPost))
 
 	// Initialize middleware chain with panic recovery, request logging, and common headers.
 	standardMiddleware := alice.New(app.addPanicRecover, app.addRequestLogger, app.addCommonHeaders)
