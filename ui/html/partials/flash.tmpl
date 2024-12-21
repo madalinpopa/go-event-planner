@@ -1,0 +1,12 @@
+{{define "flash"}}
+
+    <div class='bg-green-100'>
+
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{with .Flash}}
+                <p>{{.}}</p>
+            {{end}}
+        </div>
+
+    </div>
+{{end}}
