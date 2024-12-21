@@ -124,8 +124,8 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 // userRegister serves the user registration page by rendering the "register.tmpl"
 // template with the application context.
 func (app *App) userRegister(w http.ResponseWriter, r *http.Request) {
-	form := UserRegisterForm{}
-	app.context.Form = form
+	app.context.Form = UserRegisterForm{}
+	app.context.CSRFToken = nosurf.Token(r)
 	app.render(w, r, "register.tmpl", app.context, http.StatusOK)
 }
 
@@ -174,6 +174,7 @@ func (app *App) userRegisterPost(w http.ResponseWriter, r *http.Request) {
 // userLogin handles the user login page rendering by serving the login template
 // with the appropriate context and status.
 func (app *App) userLogin(w http.ResponseWriter, r *http.Request) {
+	app.context.Form = UserLoginForm{}
 	app.context.CSRFToken = nosurf.Token(r)
 	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
 }
@@ -181,7 +182,47 @@ func (app *App) userLogin(w http.ResponseWriter, r *http.Request) {
 // userLoginPost handles POST requests for user login, rendering the login page
 // with the provided context and HTTP status OK.
 func (app *App) userLoginPost(w http.ResponseWriter, r *http.Request) {
-	app.render(w, r, "login.tmpl", app.context, http.StatusOK)
+	app.context.CSRFToken = nosurf.Token(r)
+
+	form := UserLoginForm{}
+	err := app.formDecoder.Decode(&form, r.PostForm)
+	if err != nil {
+		app.logger.Error(err.Error())
+		app.clientError(w, r, http.StatusBadRequest, err)
+		return
+	}
+
+	form.CheckField(validator.NotBlank(form.Email), "email", "This field is required.")
+	form.CheckField(validator.Matches(form.Email, validator.EmailRX), "email", "The email address is not valid.")
+	form.CheckField(validator.NotBlank(form.Password), "password", "This field is required.")
+
+	if !form.Valid() {
+		app.Form = form
+		app.render(w, r, "login.tmpl", app.context, http.StatusUnprocessableEntity)
+		return
+	}
+
+	id, err := app.userModel.Authenticate(form.Email, form.Password)
+	if err != nil {
+		if errors.Is(err, models.ErrInvalidCredentials) {
+			form.AddNonFieldError("Invalid email or password.")
+			app.Form = form
+			app.render(w, r, "login.tmpl", app.context, http.StatusUnprocessableEntity)
+		} else {
+			app.serverError(w, r, err)
+		}
+		return
+	}
+
+	err = app.sessionManager.RenewToken(r.Context())
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+
+	app.sessionManager.Put(r.Context(), "authenticatedUserID", id)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 func (app *App) userLogout(w http.ResponseWriter, r *http.Request) {
