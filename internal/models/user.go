@@ -1,6 +1,11 @@
 package models
 
-import "database/sql"
+import (
+	"database/sql"
+	"errors"
+	"github.com/mattn/go-sqlite3"
+	"golang.org/x/crypto/bcrypt"
+)
 
 // User represents a user entity with basic
 // identification and authentication fields.
@@ -19,7 +24,23 @@ type UserModel struct {
 
 // Create adds a new user with the provided name,
 // email, and hashed password to the database.
-func (m *UserModel) Create(name, email string, password []byte) error {
+func (m *UserModel) Create(name, email, password string) error {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), 12)
+	if err != nil {
+		return err
+	}
+
+	stmt := "INSERT INTO users (name, email, password) VALUES (?, ?, ?)"
+
+	_, err = m.DB.Exec(stmt, name, email, hashedPassword)
+	if err != nil {
+		var sqliteError *sqlite3.Error
+		if errors.As(err, &sqliteError) && errors.Is(sqliteError.ExtendedCode, sqlite3.ErrConstraintUnique) {
+			return ErrDuplicateEmail
+		}
+		return err
+	}
+
 	return nil
 }
 
