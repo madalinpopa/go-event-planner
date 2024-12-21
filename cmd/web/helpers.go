@@ -26,3 +26,12 @@ func (app *App) clientError(w http.ResponseWriter, r *http.Request, status int, 
 	app.logger.Error(err.Error(), "method", method, "url", url, "status", status)
 	http.Error(w, http.StatusText(status), status)
 }
+
+func (app *App) isAuthenticated(r *http.Request) bool {
+	isAuthenticated, ok := r.Context().Value(isAuthenticatedContextKey).(bool)
+	if !ok {
+		return false
+	}
+
+	return isAuthenticated
+}
