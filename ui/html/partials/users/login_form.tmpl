@@ -1,8 +1,8 @@
 {{define "loginForm"}}
 
-    <form class="max-w-3xl mx-auto space-y-6" action="/login" method="POST">
+    <form class="max-w-3xl mx-auto space-y-6" action="/login" method="post">
 
-        <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
+        <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
         {{range .Form.NonFieldErrors}}
             <div class='text-red-500 text-sm'>{{.}}</div>
