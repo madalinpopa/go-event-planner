@@ -24,17 +24,17 @@
         <script src="https://cdn.jsdelivr.net/npm/iconify-icon@2.1.0/dist/iconify-icon.min.js"></script>
     </head>
 
-    <body class="antialiased h-full">
+    <body class="antialiased h-full bg-gray-100">
 
     <div class="min-h-[100dvh] grid grid-rows-[auto_1fr_auto] h-full">
 
-        <header class="text-xl font-bold text-center">
+        <header>
             {{template "nav" .}}
         </header>
 
         <main class="h-full">
             <!-- Display the flash message if one exists -->
-            {{template "flash".}}
+            {{template "flash" .}}
             {{template "main" .}}
         </main>
 
