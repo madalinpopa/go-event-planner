@@ -24,7 +24,7 @@ func (app *App) routes() http.Handler {
 	mux.Handle("GET /{$}", dynamic.ThenFunc(app.home))
 	mux.Handle("GET /ping", dynamic.ThenFunc(app.ping))
 	mux.Handle("GET /events/detail/{id}", dynamic.ThenFunc(app.eventView))
-	mux.Handle("GET /events/list", dynamic.ThenFunc(app.eventList))
+	mux.Handle("GET /events", dynamic.ThenFunc(app.eventList))
 
 	// Protected routes
 	mux.Handle("GET /events/create", protected.ThenFunc(app.eventCreate))
