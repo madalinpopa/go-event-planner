@@ -136,7 +136,7 @@ func (app *App) eventDelete(w http.ResponseWriter, r *http.Request) {
 		app.logger.Error(err.Error())
 		app.serverError(w, r, err)
 	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	http.Redirect(w, r, "/events", http.StatusSeeOther)
 }
 
 // userRegister serves the user registration page by rendering the "register.tmpl"
