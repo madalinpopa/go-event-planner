@@ -44,7 +44,7 @@ func (app *App) home(w http.ResponseWriter, r *http.Request) {
 }
 
 // eventDetail retrieves the details of a specific event based on the ID from the URL, renders the detail template, and responds.
-func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
+func (app *App) eventView(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
 		http.NotFound(w, r)
@@ -65,6 +65,20 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 	app.data.Event = event
 
 	app.render(w, r, "events/view.tmpl", app.data, http.StatusOK)
+}
+
+func (app *App) eventList(w http.ResponseWriter, r *http.Request) {
+	events, err := app.eventModel.GetAll()
+	if err != nil {
+		app.serverError(w, r, err)
+		return
+	}
+	authenticated := app.isAuthenticated(r)
+
+	app.data.Events = events
+	app.data.CSRFToken = nosurf.Token(r)
+	app.IsAuthenticated = authenticated
+	app.render(w, r, "events/list.tmpl", app.data, http.StatusOK)
 }
 
 // eventCreate renders the "create event" template and responds with an HTTP 200 status. It does not process input data.
