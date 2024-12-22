@@ -3,10 +3,34 @@
 {{block "main" .}}
     <div>
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
 
-            <div class="p-4 py-12">
-                <h1 class="font-bold text-4xl">Home</h1>
+            <div class="text-center py-12 space-y-2">
+                <h2 class="font-bold text-4xl">Welcome to Event Planner</h2>
+                <p class="text-gray-400 text-lg ">Organize your events with ease</p>
+            </div>
+
+            <div class="space-y-8 sm:px-6">
+
+                <div class="bg-white p-6 rounded-md space-y-4 shadow-md group hover:border-sky-500 hover:ring-sky-500">
+                    <iconify-icon class="text-sky-500" icon="lucide:calendar" width="48" height="48"></iconify-icon>
+                    <div class="space-y-2">
+                        <a href="/events" class="text-xl font-semibold group-hover:cursor-pointer">View Events</a>
+                        <p class="text-gray-500">Manage and organize your upcoming events</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-md space-y-4 shadow-md group hover:border-sky-500 hover:ring-sky-500">
+                    <iconify-icon class="text-rose-500" icon="material-symbols:logout" width="48" height="48"></iconify-icon>
+                    <div class="space-y-2">
+                        <form action="/logout" method="post" class="flex items-center">
+                            <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
+                            <button class="text-xl font-semibold group-hover:cursor-pointer" type="submit">Logout</button>
+                        </form>
+                        <p class="text-gray-500">Sign out of your account</p>
+                    </div>
+                </div>
+
             </div>
 
         </div>
