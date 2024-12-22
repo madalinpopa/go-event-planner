@@ -64,31 +64,13 @@ func (app *App) eventDetail(w http.ResponseWriter, r *http.Request) {
 	// Assign the retrieved event data to the application data structure.
 	app.data.Event = event
 
-	app.render(w, r, "events/detail.tmpl", app.data, http.StatusOK)
+	app.render(w, r, "event_view.tmpl", app.data, http.StatusOK)
 }
 
 // eventCreate renders the "create event" template and responds with an HTTP 200 status. It does not process input data.
 func (app *App) eventCreate(w http.ResponseWriter, r *http.Request) {
 	app.Form = EventForm{}
-	app.render(w, r, "events/create.tmpl", app.data, http.StatusOK)
-}
-
-// eventDelete handles the deletion of an event record based on the ID extracted from the URL path.
-// It returns a 404 Not Found error if the ID is invalid or the event does not exist.
-// Logs internal errors and redirects to the home page upon successful deletion.
-func (app *App) eventDelete(w http.ResponseWriter, r *http.Request) {
-	id, err := strconv.Atoi(r.PathValue("id"))
-	if err != nil {
-		http.NotFound(w, r)
-		return
-	}
-
-	err = app.eventModel.Delete(id)
-	if err != nil {
-		app.logger.Error(err.Error())
-		app.serverError(w, r, err)
-	}
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	app.render(w, r, "event_create.tmpl", app.data, http.StatusOK)
 }
 
 // eventCreatePost handles the POST request for creating an event, parses the form data, and validates the request.
@@ -115,7 +97,7 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 	if !form.Valid() {
 		fmt.Println(form)
 		app.Form = form
-		app.render(w, r, "events/create.tmpl", app.data, http.StatusUnprocessableEntity)
+		app.render(w, r, "event_create.tmpl", app.data, http.StatusUnprocessableEntity)
 		return
 	}
 
@@ -123,6 +105,24 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(id, err)
 
 	http.Redirect(w, r, "/", http.StatusFound)
+}
+
+// eventDelete handles the deletion of an event record based on the ID extracted from the URL path.
+// It returns a 404 Not Found error if the ID is invalid or the event does not exist.
+// Logs internal errors and redirects to the home page upon successful deletion.
+func (app *App) eventDelete(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	err = app.eventModel.Delete(id)
+	if err != nil {
+		app.logger.Error(err.Error())
+		app.serverError(w, r, err)
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // userRegister serves the user registration page by rendering the "register.tmpl"
