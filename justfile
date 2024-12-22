@@ -21,6 +21,9 @@ dev:
       --files 'ui/html/**/*.tmpl, ui/static/**/*.css' \
       --port {{browser_sync_port}} \
       --proxy 'localhost:{{dev_port}}' \
+      --no-notify \
+      --no-open \
+      --no-ghost-mode \
       --middleware 'function(req, res, next) { \
         res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); \
         return next(); \
