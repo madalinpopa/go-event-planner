@@ -1,0 +1,26 @@
+{{define "menu"}}
+    <div class="flex items-center gap-8">
+
+        <div class="text-base font-pally text-gray-700 flex items-center gap-8 font-light tracking-wide">
+
+            <a class="hover:text-blue-400" href="/">Home</a>
+
+            <a class="hover:text-blue-400" href="/events">Events</a>
+
+            {{if .IsAuthenticated}}
+                <form action="/logout" method="post" class="flex items-center">
+                    <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
+                    <iconify-icon class="pr-1" icon="material-symbols:logout" width="24" height="24"></iconify-icon>
+                    <button class="hover:text-blue-400" type="submit">Logout</button>
+                </form>
+            {{else}}
+
+                <a class="hover:text-blue-400" href="/login">Login</a>
+
+                <a class="hover:text-blue-400" href="/register">Register</a>
+            {{end}}
+
+        </div>
+
+    </div>
+{{end}}
