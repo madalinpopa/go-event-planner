@@ -1,22 +1,23 @@
 {{define "title"}}Register - Event Planner{{end}}
 
 {{define "main"}}
-    <div>
-
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
-            <div class="p-4 py-12">
-
-                <div class="max-w-3xl mx-auto pb-8">
-                    <h2 class="text-xl font-semibold">Register</h2>
+    <div class="min-h-screen bg-gray-50 py-12">
+        <div class="max-w-md mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white shadow-sm rounded-lg">
+                <div class="px-8 py-6">
+                    <h2 class="text-2xl font-bold text-center text-gray-900 mb-8">Create your account</h2>
+                    {{template "registerForm" .}}
                 </div>
-
-                {{template "registerForm" .}}
-
             </div>
 
+            <div class="text-center mt-6">
+                <p class="text-sm text-gray-600">
+                    Already have an account?
+                    <a href="/login" class="font-medium text-blue-600 hover:text-blue-500">
+                        Sign in
+                    </a>
+                </p>
+            </div>
         </div>
-
     </div>
-
 {{end}}
