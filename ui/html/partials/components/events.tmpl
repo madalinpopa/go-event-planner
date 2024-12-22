@@ -1,28 +1,37 @@
 {{define "events"}}
-
     {{with .Events}}
-        {{range .}}
-            <div class="flex justify-between">
-                <div class="p-4 py-4">
-                    <h1 class="font-bold text-xl">{{.Title}}</h1>
-                    <p>{{.Description}}</p>
-                    <p>{{.EventDate}}</p>
-                </div>
+        <div class="max-w-6xl mx-auto space-y-4">
+            {{range .}}
+                <div class="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                    <div class="flex justify-between items-start p-6">
+                        <div class="flex-grow">
+                            <h2 class="text-xl font-bold mb-2">{{.Title}}</h2>
+                            <p class="text-gray-600 mb-3">{{.Description}}</p>
+                            <time datetime="{{.EventDate}}" class="text-gray-500">{{.EventDate}}</time>
+                        </div>
 
-                {{ if $.IsAuthenticated}}
-                    <div>
-                        <form action="/events/{{.Id}}/delete" method="POST">
-                            <input type="hidden" name='csrf_token' value="{{$.CSRFToken}}">
-                            <button type="submit"
-                                    class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
-                                <iconify-icon icon="mingcute:delete-line" width="24" height="24"></iconify-icon>
-                            </button>
-                        </form>
+                        {{ if $.IsAuthenticated}}
+                            <div class="flex items-start ml-4">
+                                <form action="/events/{{.Id}}/delete" method="POST">
+                                    <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                                    <button type="submit"
+                                            class="p-2 text-white bg-red-500 hover:bg-red-600 rounded-lg transition-colors">
+                                        <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16">
+                                            </path>
+                                        </svg>
+                                    </button>
+                                </form>
+                            </div>
+                        {{end}}
                     </div>
-                {{end}}
-
-            </div>
-
-        {{end}}
+                </div>
+            {{end}}
+        </div>
+    {{else}}
+        <div class="text-center py-12">
+            <p class="text-gray-500">No events found</p>
+        </div>
     {{end}}
 {{end}}
