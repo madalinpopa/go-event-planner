@@ -18,12 +18,15 @@
                     <div class="text-base font-pally flex items-center gap-4 font-light tracking-wide">
 
 
+                        <a class="hover:text-blue-400" href="/events/list">Events</a>
+
                         {{if .IsAuthenticated}}
                             <form action="/logout" method="post">
                                 <input type="hidden" name='csrf_token' value="{{.CSRFToken}}">
                                 <button class="hover:text-blue-400" type="submit">Logout</button>
                             </form>
                         {{else}}
+
                             <a class="hover:text-blue-400" href="/login">Login</a>
 
                             <a class="hover:text-blue-400" href="/register">Register</a>
