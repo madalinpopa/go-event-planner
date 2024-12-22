@@ -1,30 +1,50 @@
 {{define "loginForm"}}
-
-    <form class="max-w-3xl mx-auto space-y-6" action="/login" method="post">
-
+    <form class="space-y-6" action="/login" method="post">
         <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
 
         {{range .Form.NonFieldErrors}}
-            <div class='text-red-500 text-sm'>{{.}}</div>
+            <div class="p-3 bg-red-50 text-red-600 text-sm rounded-md">{{.}}</div>
         {{end}}
 
-        <div class="flex flex-col space-y-2">
-            <label for="email">E-mail</label>
-            {{with .Form.FieldErrors.email }}
-                <span class="text-red-500 text-sm">* {{.}}</span>
+        <div class="space-y-2">
+            <label for="email" class="block text-sm font-medium text-gray-700">
+                Email address
+            </label>
+            <input
+                    type="email"
+                    name="email"
+                    id="email"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="you@example.com"
+            />
+            {{with .Form.FieldErrors.email}}
+                <p class="text-sm text-red-600">{{.}}</p>
             {{end}}
-            <input type="email" name="email" id="email" />
         </div>
 
-        <div class="flex flex-col space-y-2">
-            <label for="password">Password</label>
-            {{with .Form.FieldErrors.password }}
-                <span class="text-red-500 text-sm">* {{.}}</span>
+        <div class="space-y-2">
+            <label for="password" class="block text-sm font-medium text-gray-700">
+                Password
+            </label>
+            <input
+                    type="password"
+                    name="password"
+                    id="password"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="••••••••"
+            />
+            {{with .Form.FieldErrors.password}}
+                <p class="text-sm text-red-600">{{.}}</p>
             {{end}}
-            <input type="password" name="password" id="password" />
         </div>
 
-        <input type="submit" value="Login" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 cursor-pointer">
+        <div>
+            <button
+                    type="submit"
+                    class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            >
+                Sign in
+            </button>
+        </div>
     </form>
-
 {{end}}
