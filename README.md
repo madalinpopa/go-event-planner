@@ -97,47 +97,47 @@ This will start:
 ```
 .
 ├── cmd/
-│   └── web/              # Web application code
-│       ├── context.go    # Request context definitions
-│       ├── forms.go      # Form handling and validation
-│       ├── handlers.go   # HTTP request handlers
-│       ├── helpers.go    # Helper functions
-│       ├── main.go       # Application entry point
-│       ├── middleware.go # HTTP middleware
-│       ├── routes.go     # Route definitions
-│       └── templates.go  # Template handling
-├── database/             # Database related files
-│   ├── events.db        # SQLite database
-│   └── migrations/      # Database migrations
-├── internal/            # Private application packages
-│   ├── models/         # Data models
+│   └── web/                    # Web application code
+│       ├── context.go          # Request context definitions
+│       ├── forms.go            # Form handling and validation
+│       ├── handlers.go         # HTTP request handlers
+│       ├── helpers.go          # Helper functions
+│       ├── main.go             # Application entry point
+│       ├── middleware.go       # HTTP middleware
+│       ├── routes.go           # Route definitions
+│       └── templates.go        # Template handling
+├── database/                   # Database related files
+│   ├── events.db               # SQLite database
+│   └── migrations/             # Database migrations
+├── internal/                   # Private application packages
+│   ├── models/                 # Data models
 │   │   ├── errors.go
 │   │   ├── event.go
 │   │   └── user.go
-│   └── validator/      # Validation logic
+│   └── validator/              # Validation logic
 │       └── validator.go
-├── ui/                 # User interface related code
-│   ├── assets/        # Source assets
-│   │   └── input.css  # TailwindCSS input file
-│   ├── embed.go       # File embedding for Go
+├── ui/                         # User interface related code
+│   ├── assets/                 # Source assets
+│   │   └── input.css           # TailwindCSS input file
+│   ├── embed.go                # File embedding for Go
 │   ├── html/         
-│   │   ├── base.tmpl              # Base template
-│   │   ├── pages/                 # Page templates
-│   │   │   ├── auth/             # Authentication pages
-│   │   │   ├── events/           # Event management pages
-│   │   │   └── home.tmpl         # Homepage
-│   │   └── partials/             # Reusable template parts
-│   │       ├── components/       # UI components
-│   │       └── forms/           # Form templates
-│   └── static/                  # Static assets
+│   │   ├── base.tmpl           # Base template
+│   │   ├── pages/              # Page templates
+│   │   │   ├── auth/           # Authentication pages
+│   │   │   ├── events/         # Event management pages
+│   │   │   └── home.tmpl       # Homepage
+│   │   └── partials/           # Reusable template parts
+│   │       ├── components/     # UI components
+│   │       └── forms/          # Form templates
+│   └── static/                 # Static assets
 │       ├── css/                # Compiled CSS
-│       ├── fonts/             # Custom fonts
-│       ├── img/              # Images
-│       └── js/              # JavaScript files
-├── Dockerfile           # Docker configuration
-├── go.mod              # Go module definition
-├── justfile            # Task runner commands
-└── tailwind.config.js  # TailwindCSS configuration
+│       ├── fonts/              # Custom fonts
+│       ├── img/                # Images
+│       └── js/                 # JavaScript files
+├── Dockerfile                  # Docker configuration
+├── go.mod                      # Go module definition
+├── justfile                    # Task runner commands
+└── tailwind.config.js          # TailwindCSS configuration
 ```
 
 ## Contributing
