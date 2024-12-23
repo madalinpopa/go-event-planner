@@ -30,7 +30,7 @@ func (app *App) ping(w http.ResponseWriter, r *http.Request) {
 // home renders the home template and responds with an HTTP 200 status. It does not take or process any additional data.
 func (app *App) home(w http.ResponseWriter, r *http.Request) {
 
-	events, err := app.eventModel.GetAll()
+	events, err := app.eventModel.List()
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -51,7 +51,7 @@ func (app *App) eventView(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	event, err := app.eventModel.Get(id)
+	event, err := app.eventModel.Retrieve(id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			http.NotFound(w, r)
@@ -68,7 +68,7 @@ func (app *App) eventView(w http.ResponseWriter, r *http.Request) {
 }
 
 func (app *App) eventList(w http.ResponseWriter, r *http.Request) {
-	events, err := app.eventModel.GetAll()
+	events, err := app.eventModel.List()
 	if err != nil {
 		app.serverError(w, r, err)
 		return
@@ -130,7 +130,7 @@ func (app *App) eventEdit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	event, err := app.eventModel.Get(id)
+	event, err := app.eventModel.Retrieve(id)
 	if err != nil {
 		if errors.Is(err, models.ErrNoRecord) {
 			http.NotFound(w, r)
@@ -141,6 +141,39 @@ func (app *App) eventEdit(w http.ResponseWriter, r *http.Request) {
 	app.Form = EventForm{}
 	app.data.Event = event
 	app.render(w, r, "events/edit.tmpl", app.data, http.StatusOK)
+}
+
+func (app *App) eventEditPost(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	var form EventForm
+
+	err = app.formDecoder.Decode(&form, r.PostForm)
+	if err != nil {
+		app.clientError(w, r, http.StatusBadRequest, err)
+		return
+	}
+
+	form.CheckField(validator.NotBlank(form.Title), "title", "This field is required.")
+	form.CheckField(validator.NotBlank(form.Location), "location", "This field is required.")
+	form.CheckField(validator.MaxChars(form.Description, 255), "description", "The description must be less than 255 characters.")
+	form.CheckField(validator.ValidDate(form.EventDate), "eventDate", "This field is required.")
+
+	if !form.Valid() {
+		app.Form = form
+		app.render(w, r, "events/edit.tmpl", app.data, http.StatusUnprocessableEntity)
+		return
+	}
+
+	err = app.eventModel.Update(id, form.Title, form.Description, form.EventDate, form.Location)
+	if err != nil {
+		app.serverError(w, r, err)
+	}
+	http.Redirect(w, r, "/events", http.StatusSeeOther)
 }
 
 // eventDelete handles the deletion of an event record based on the ID extracted from the URL path.
