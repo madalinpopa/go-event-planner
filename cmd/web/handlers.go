@@ -121,6 +121,28 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
+// eventEdit handles the editing of an event by retrieving its details
+// and rendering the edit form with pre-filled data.
+func (app *App) eventEdit(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.PathValue("id"))
+	if err != nil {
+		http.NotFound(w, r)
+		return
+	}
+
+	event, err := app.eventModel.Get(id)
+	if err != nil {
+		if errors.Is(err, models.ErrNoRecord) {
+			http.NotFound(w, r)
+		} else {
+			app.serverError(w, r, err)
+		}
+	}
+	app.Form = EventForm{}
+	app.data.Event = event
+	app.render(w, r, "events/edit.tmpl", app.data, http.StatusOK)
+}
+
 // eventDelete handles the deletion of an event record based on the ID extracted from the URL path.
 // It returns a 404 Not Found error if the ID is invalid or the event does not exist.
 // Logs internal errors and redirects to the home page upon successful deletion.
