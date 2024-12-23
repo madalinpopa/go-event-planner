@@ -105,6 +105,24 @@ func (app *App) loginRequired(next http.Handler) http.Handler {
 	})
 }
 
+// redirectAuthenticatedUsers is a middleware that redirects authenticated users attempting
+// to access the login or register pages to the events page.
+func (app *App) redirectAuthenticatedUsers(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Check if the user is authenticated using app's existing method
+		if app.isAuthenticated(r) {
+			// Check if the path is either the login or register page
+			if r.URL.Path == "/login" || r.URL.Path == "/register" {
+				// Redirect authenticated users to the events page
+				http.Redirect(w, r, "/events", http.StatusSeeOther)
+				return
+			}
+		}
+		// If not authenticated or not targeting the restricted pages, continue
+		next.ServeHTTP(w, r)
+	})
+}
+
 // authenticate is a middleware that checks if a user is authenticated based on
 // session data and updates the request data.
 //
