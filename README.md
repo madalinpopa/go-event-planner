@@ -2,6 +2,22 @@
 
 A lightweight web application written in Go that allows users to manage events through a simple CRUD interface. The project serves as a practical implementation of essential web application features using Go's standard library and minimal dependencies.
 
+## Screenshots
+
+Here's a visual walkthrough of the application:
+
+### Home Page
+![Home Page Screenshot](ui/assets/img/home.png)
+The home page provides quick access to event management and user authentication.
+
+### Events List
+![Events List Screenshot](ui/assets/img/events.png)
+View and manage all your events in one place, with options to create, edit, and delete events.
+
+### Event Details
+![Event Details Screenshot](ui/assets/img/view.png)
+Detailed view of individual events showing all relevant information.
+
 ## Features
 
 - **Event Management**
