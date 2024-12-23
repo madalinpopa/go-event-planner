@@ -23,7 +23,7 @@ func (app *App) routes() http.Handler {
 	// Public routes
 	mux.Handle("GET /{$}", dynamic.ThenFunc(app.home))
 	mux.Handle("GET /ping", dynamic.ThenFunc(app.ping))
-	mux.Handle("GET /events/detail/{id}", dynamic.ThenFunc(app.eventView))
+	mux.Handle("GET /events/{id}", dynamic.ThenFunc(app.eventView))
 	mux.Handle("GET /events", dynamic.ThenFunc(app.eventList))
 
 	// Protected routes
