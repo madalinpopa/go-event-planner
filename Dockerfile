@@ -1,12 +1,11 @@
 # Build stage
-FROM golang:1.23-alpine AS builder
+FROM golang:1.23-bookworm AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Install necessary build tools and standalone Tailwind CSS
-RUN apk add --no-cache git build-base curl && \
-    curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-arm64 && \
+# Install Tailwind CSS
+RUN curl -sLO https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-arm64 && \
     chmod +x tailwindcss-linux-arm64 && \
     mv tailwindcss-linux-arm64 /usr/local/bin/tailwindcss
 
@@ -27,15 +26,15 @@ RUN CGO_ENABLED=1 GOOS=linux GOARCH=arm64 \
     go build -o main ./cmd/web
 
 # Final stage
-FROM arm64v8/alpine:3.18
+FROM debian:bookworm-slim
 
 WORKDIR /app
 
 # Install necessary runtime dependencies including SQLite
-RUN apk --no-cache add \
+RUN apt-get update && apt-get install -y \
     ca-certificates \
-    sqlite \
-    sqlite-libs
+    sqlite3 \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy only the binary from builder
 COPY --from=builder /app/main .
