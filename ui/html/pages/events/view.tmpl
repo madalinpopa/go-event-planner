@@ -1,18 +1,85 @@
 {{define "title"}}Event Detail{{end}}
 
 {{define "main"}}
-    <div>
-
+    <div class="bg-gray-50 min-h-screen py-8">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
+            {{with .Event}}
+                <div class="bg-white rounded-lg shadow-sm p-8">
+                    <!-- Header with Title and Actions -->
+                    <div class="flex justify-between items-start mb-6">
+                        <h1 class="font-bold text-3xl text-gray-900">{{.Title}}</h1>
+                        {{ if $.IsAuthenticated}}
+                            <div class="flex gap-2">
+                                <a href="/events/{{.Id}}/edit"
+                                   class="px-4 py-2 text-sm font-medium text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-md transition-colors">
+                                    Edit
+                                </a>
+                                <form action="/events/{{.Id}}/delete" method="POST" class="inline">
+                                    <input type="hidden" name="csrf_token" value="{{$.CSRFToken}}">
+                                    <button type="submit"
+                                            class="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700 hover:bg-red-50 rounded-md transition-colors">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        {{end}}
+                    </div>
 
-            <div class="p-4 py-12">
-                {{with .Event}}
-                    <h1 class="font-bold text-4xl">{{ .Title }}</h1>
-                {{end}}
-            </div>
+                    <!-- Event Details -->
+                    <div class="space-y-6">
+                        <!-- Time and Location -->
+                        <div class="flex flex-col sm:flex-row gap-4 text-sm text-gray-500">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <time datetime="{{.EventDate}}">{{.EventDate}}</time>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                </svg>
+                                <span>{{.Location}}</span>
+                            </div>
+                        </div>
 
+                        <!-- Description -->
+                        <div class="prose max-w-none">
+                            <p class="text-gray-600">{{.Description}}</p>
+                        </div>
+
+                        <!-- Metadata -->
+                        <div class="pt-6 mt-6 border-t border-gray-100">
+                            <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                                <div>
+                                    <dt class="text-gray-500">Created</dt>
+                                    <dd class="mt-1 text-gray-900">{{humanDate .CreatedAt}}</dd>
+                                </div>
+                                <div>
+                                    <dt class="text-gray-500">Last Updated</dt>
+                                    <dd class="mt-1 text-gray-900">{{humanDate .UpdatedAt}}</dd>
+                                </div>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Back Button -->
+                <div class="mt-6">
+                    <a href="/events"
+                       class="text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                        </svg>
+                        Back to Events
+                    </a>
+                </div>
+            {{end}}
         </div>
-
     </div>
-
 {{end}}
