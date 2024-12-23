@@ -30,6 +30,30 @@ Detailed view of individual events showing all relevant information.
     - CSRF protection
     - Secure password handling
 
+## Dependencies
+
+### Backend Dependencies
+- **github.com/alexedwards/scs/v2**: Session management middleware for secure user sessions
+- **github.com/alexedwards/scs/sqlite3store**: SQLite3 session store for SCS
+- **github.com/go-playground/form/v4**: Form decoder and validator for processing HTTP form data
+- **github.com/justinas/alice**: Middleware chaining for clean HTTP handler composition
+- **github.com/justinas/nosurf**: CSRF protection middleware
+- **github.com/mattn/go-sqlite3**: SQLite3 database driver
+- **golang.org/x/crypto/bcrypt**: Password hashing and verification
+
+### Frontend Dependencies
+- **TailwindCSS**: Utility-first CSS framework for styling
+    - **@tailwindcss/forms**: Form styling plugin
+    - **@tailwindcss/typography**: Typography styling plugin
+- **Iconify**: Icon system with multiple icon sets
+    - Used via CDN for UI icons (material-symbols, lucide, etc.)
+
+### Development Tools
+- **Air**: Live reload for Go applications during development
+- **Browser-sync**: Browser synchronization and auto-reload
+- **Just**: Command runner for development tasks
+- **Goose**: Database migration tool
+
 ## Tech Stack
 
 - **Backend**
