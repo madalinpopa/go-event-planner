@@ -30,6 +30,7 @@ func (app *App) routes() http.Handler {
 	mux.Handle("GET /events/create", protected.ThenFunc(app.eventCreate))
 	mux.Handle("POST /events/create", protected.ThenFunc(app.eventCreatePost))
 	mux.Handle("GET /events/{id}/edit", protected.ThenFunc(app.eventEdit))
+	mux.Handle("POST /events/{id}/edit", protected.ThenFunc(app.eventEditPost))
 	mux.Handle("POST /events/{id}/delete", protected.ThenFunc(app.eventDelete))
 
 	// User registration and authentication routes
