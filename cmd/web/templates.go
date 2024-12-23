@@ -20,6 +20,12 @@ var functions = template.FuncMap{
 		}
 		return t.Format("02 Jan 2006 at 15:04")
 	},
+	"formatDate": func(t time.Time) string {
+		if t.IsZero() {
+			return ""
+		}
+		return t.Format("2006-01-02")
+	},
 }
 
 // newTemplateCache initializes and returns a cache of precompiled templates, or an error if the operation fails.
