@@ -118,7 +118,7 @@ func (app *App) eventCreatePost(w http.ResponseWriter, r *http.Request) {
 	id, err := app.eventModel.Create(form.Title, form.Description, form.EventDate, form.Location)
 	fmt.Println(id, err)
 
-	http.Redirect(w, r, "/", http.StatusFound)
+	http.Redirect(w, r, "/events", http.StatusFound)
 }
 
 // eventEdit handles the editing of an event by retrieving its details
@@ -143,6 +143,8 @@ func (app *App) eventEdit(w http.ResponseWriter, r *http.Request) {
 	app.render(w, r, "events/edit.tmpl", app.data, http.StatusOK)
 }
 
+// eventEditPost handles the logic for editing an event, including form decoding,
+// validation, and updating the database.
 func (app *App) eventEditPost(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.PathValue("id"))
 	if err != nil {
