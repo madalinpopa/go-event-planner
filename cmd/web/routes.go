@@ -16,7 +16,7 @@ func (app *App) routes() http.Handler {
 	mux.Handle("GET /static/", http.FileServerFS(ui.Files))
 
 	// Use the nosurf middleware on all 'csrfProtect' routes.
-	dynamic := alice.New(app.sessionManager.LoadAndSave, csrfToken, app.authenticate)
+	dynamic := alice.New(app.sessionManager.LoadAndSave, csrfToken, app.authenticate, app.redirectAuthenticatedUsers)
 
 	protected := dynamic.Append(app.loginRequired)
 
