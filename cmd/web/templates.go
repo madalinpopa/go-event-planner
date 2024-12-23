@@ -18,7 +18,7 @@ var functions = template.FuncMap{
 		if t.IsZero() {
 			return ""
 		}
-		return t.UTC().Format("2006-01-02")
+		return t.Format("02 Jan 2006 at 15:04")
 	},
 }
 
